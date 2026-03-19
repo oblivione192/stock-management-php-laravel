@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { RouterLink, RouterView, useRoute } from 'vue-router';  
-
+import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router';  
+import useProfileStore from './stores/profileStore';
 const route = useRoute();
 
 const showHeader = computed(() => !route.meta.hideHeader);
@@ -11,7 +11,19 @@ const mainClassName = computed(() => {
     }
 
     return 'mx-auto flex min-h-screen w-full max-w-6xl items-center justify-center px-6 py-10';
-});
+});  
+
+const profileStore = useProfileStore();
+
+const isAuthenticated = computed(() => profileStore.name!== ''); 
+
+const router = useRouter();
+
+const logOut = (): void => {
+    profileStore.clearProfile();
+    localStorage.removeItem('inventory_api_token');
+    router.go(0);
+}; 
 
 </script>
 
@@ -33,7 +45,15 @@ const mainClassName = computed(() => {
                     <RouterLink to="/categories" class="rounded-md px-3 py-2 hover:bg-neutral-800">Categories</RouterLink>
                     <RouterLink to="/products" class="rounded-md px-3 py-2 hover:bg-neutral-800">Products</RouterLink>
                     <RouterLink to="/stock-movements" class="rounded-md px-3 py-2 hover:bg-neutral-800">Stock Movements</RouterLink>
-                </nav>
+                </nav>  
+                
+                 <button
+                    @click="logOut"
+                    v-if="isAuthenticated"
+                    class="mt-6 rounded-md border border-red-600 bg-red-600 px-4 py-2 text-sm text-white hover:bg-red-700"
+                >
+                    Log Out
+                </button>
             </div>
         </header>
 

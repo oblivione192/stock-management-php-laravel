@@ -130,7 +130,7 @@ const submitLogin = async (): Promise<void> => {
         profileStore.setProfile(response.user.name, response.user.email);
         success.value = '';
         loginForm.value.password = '';
-        await router.replace({ name: 'dashboard' });
+        await router.replace({ name: 'home' });
     } catch (err) {
         error.value =
             err instanceof Error ? err.message : 'Unable to complete login.';

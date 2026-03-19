@@ -4,15 +4,7 @@ import { useRouter } from 'vue-router';
 import useProfileStore from '@/stores/profileStore'; 
 
 const profileStore = useProfileStore();
-const isAuthenticated = computed(() => profileStore.name!== ''); 
 
-const router = useRouter();
-
-const logOut = (): void => {
-    profileStore.clearProfile();
-    localStorage.removeItem('inventory_api_token');
-    router.go(0);
-}; 
 
 </script>
 
@@ -33,12 +25,6 @@ const logOut = (): void => {
                 View Stock Movements
             </a>
         </div> 
-        <button
-            @click="logOut"
-            v-if="isAuthenticated"
-            class="mt-6 rounded-md border border-red-600 bg-red-600 px-4 py-2 text-sm text-white hover:bg-red-700"
-        >
-            Log Out
-        </button>
+       
     </section>
 </template>
