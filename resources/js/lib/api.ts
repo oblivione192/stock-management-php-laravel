@@ -4,6 +4,28 @@ const baseUrl =
         '',
     );
 
+const AUTH_TOKEN_KEY = 'inventory_api_token';
+
+export function getAuthToken(): string | null {
+    return localStorage.getItem(AUTH_TOKEN_KEY);
+}
+
+export function setAuthToken(token: string): void {
+    const normalizedToken = token.trim();
+
+    if (!normalizedToken) {
+        localStorage.removeItem(AUTH_TOKEN_KEY);
+
+        return;
+    }
+
+    localStorage.setItem(AUTH_TOKEN_KEY, normalizedToken);
+}
+
+export function clearAuthToken(): void {
+    localStorage.removeItem(AUTH_TOKEN_KEY);
+}
+
 const toUrl = (path: string): string => {
     const normalizedPath = path.startsWith('/') ? path : `/${path}`;
 
@@ -24,11 +46,27 @@ const toErrorMessage = (status: number, statusText: string, body: string): strin
     }
 };
 
+const createHeaders = (includeJsonBody = false): HeadersInit => {
+    const headers: Record<string, string> = {
+        Accept: 'application/json',
+    };
+
+    if (includeJsonBody) {
+        headers['Content-Type'] = 'application/json';
+    }
+
+    const token = getAuthToken();
+
+    if (token) {
+        headers.Authorization = `Bearer ${token}`;
+    }
+
+    return headers;
+};
+
 export async function getJson<T>(path: string): Promise<T> {
     const response = await fetch(toUrl(path), {
-        headers: {
-            Accept: 'application/json',
-        },
+        headers: createHeaders(),
     });
 
     if (!response.ok) {
@@ -43,9 +81,7 @@ export async function getJson<T>(path: string): Promise<T> {
 export async function deleteRequest(path: string): Promise<void> {
     const response = await fetch(toUrl(path), {
         method: 'DELETE',
-        headers: {
-            Accept: 'application/json',
-        },
+        headers: createHeaders(),
     });
 
     if (!response.ok) {
@@ -61,10 +97,7 @@ export async function putJson<T, TBody extends object>(
 ): Promise<T> {
     const response = await fetch(toUrl(path), {
         method: 'PUT',
-        headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-        },
+        headers: createHeaders(true),
         body: JSON.stringify(body),
     });
      
@@ -83,10 +116,7 @@ export async function postJson<T, TBody extends object>(
 ): Promise<T> {
     const response = await fetch(toUrl(path), {
         method: 'POST',
-        headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-        },
+        headers: createHeaders(true),
         body: JSON.stringify(body),
     });
 

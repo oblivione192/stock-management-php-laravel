@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Controllers;
 
 use App\Filters\ProductFilter;
 use App\Models\Product;
@@ -46,15 +46,15 @@ class ProductController extends Controller
         try {
             $productId = $request->route('id');
             $validatedData = $request->validate([
-                'sku' => 'required', 
+                'sku' => 'required',
                 'category_id' => 'required|exists:categories,id',
                 'unit' => 'required',
                 'cost_price' => 'required',
                 'selling_price' => 'required',
                 'reorder_level' => 'required',
                 'current_stock' => 'required',
-            ]); 
-            
+            ]);
+
             $product = Product::query()->find($productId);
 
             if (! $product) {
@@ -64,10 +64,10 @@ class ProductController extends Controller
                     ],
                     404
                 );
-            } 
+            }
             $product = Product::query()
                 ->where('id', $productId)
-                ->update($validatedData); 
+                ->update($validatedData);
 
             return new JsonResponse($product);
         } catch (Exception $e) {

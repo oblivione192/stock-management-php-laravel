@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Controllers;
 
 use App\Filters\StockMovementFilter;
 use App\Models\Product;
@@ -45,12 +45,12 @@ class StockMovementController extends Controller
         }
 
         $movements = $stockMovementQuery->paginate(
-            perPage: $limit, 
-            columns: ['*'], 
-             page: $page, 
+            perPage: $limit,
+            columns: ['*'],
+             page: $page,
             pageName: 'page'
         );
-        
+
 
         return response()->json([
             'movements' => $movements,

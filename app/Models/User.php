@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
 class User extends Authenticatable
-{
+{ 
+     use HasApiTokens;
     use HasFactory;
     use Notifiable;
     use TwoFactorAuthenticatable;
@@ -31,18 +33,6 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
-        'remember_token',
-        'two_factor_secret',
-        'two_factor_recovery_codes',
-    ];
-
-    /**
-     * The attributes that should be appended.
-     *
-     * @var array<int, string>
-     */
-    protected $appends = [
-        'avatar',
     ];
 
     /**
@@ -53,15 +43,9 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'two_factor_confirmed_at' => 'datetime',
             'password' => 'hashed',
         ];
     }
 
-    public function getAvatarAttribute(): ?string
-    {
-        return null;
-    }
 }
 

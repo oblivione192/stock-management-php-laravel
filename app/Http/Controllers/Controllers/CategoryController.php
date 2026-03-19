@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Controllers;
 
 use App\Filters\CategoryFilter;
 use App\Models\Category;
