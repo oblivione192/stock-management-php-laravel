@@ -44,14 +44,15 @@ const logOut = (): void => {
                     <RouterLink to="/dashboard" class="rounded-md px-3 py-2 hover:bg-neutral-800">Dashboard</RouterLink>
                     <RouterLink to="/categories" class="rounded-md px-3 py-2 hover:bg-neutral-800">Categories</RouterLink>
                     <RouterLink to="/products" class="rounded-md px-3 py-2 hover:bg-neutral-800">Products</RouterLink>
-                    <RouterLink to="/stock-movements" class="rounded-md px-3 py-2 hover:bg-neutral-800">Stock Movements</RouterLink>
+                    <RouterLink to="/stock-movements" class="rounded-md px-3 py-2 hover:bg-neutral-800">Stock Movements</RouterLink> 
+                    
                 </nav>  
-                
+
                  <button
-                    @click="logOut"
-                    v-if="isAuthenticated"
-                    class="mt-6 rounded-md border border-red-600 bg-red-600 px-4 py-2 text-sm text-white hover:bg-red-700"
-                >
+                        @click="logOut"
+                        v-if="isAuthenticated"
+                        class="mt-6 relative -top-3 rounded-md border border-red-600 bg-red-600 px-4 py-3 text-sm text-white hover:bg-red-700"
+                    >
                     Log Out
                 </button>
             </div>
