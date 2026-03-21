@@ -1,10 +1,11 @@
 import { createPinia } from 'pinia';
 import { createApp } from 'vue';
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router';;
+import './echo';
+import useProfileStore from '@/stores/profileStore';
 import App from './App.vue';
 import { clearAuthToken, getAuthToken, getJson } from './lib/api';
 import { routes } from './router';
-import useProfileStore from './stores/profileStore';
 
 import '../css/app.css';
 
@@ -39,7 +40,7 @@ router.beforeEach(async (to) => {
 
             profileStore.setProfile(profile.name, profile.email);
         } catch  {
-    
+
             clearAuthToken();
             profileStore.clearProfile();
 
@@ -54,4 +55,7 @@ router.beforeEach(async (to) => {
     return true;
 });
 
-createApp(App).use(router).use(pinia).mount('#app');
+createApp(App)
+    .use(router)
+    .use(pinia)
+    .mount('#app');

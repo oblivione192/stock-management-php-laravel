@@ -8,12 +8,11 @@ export type ProductRow = {
     sku: string;
     name: string;
     moved_at: string;
-    quantity: number;
     category_id: number | null;
     supplier_id: number | null;
     unit: string;
-    cost_price: string | number;
-    selling_price: string | number;
+    cost_price: number;
+    selling_price: number;
     reorder_level: number;
     current_stock: number;
     category: {

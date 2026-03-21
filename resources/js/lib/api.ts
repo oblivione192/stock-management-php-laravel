@@ -1,8 +1,4 @@
-const baseUrl =
-    (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api').replace(
-        /\/$/,
-        '',
-    );
+const baseUrl = '/api'
 
 const AUTH_TOKEN_KEY = 'inventory_api_token';
 
@@ -76,7 +72,7 @@ export async function getJson<T>(path: string): Promise<T> {
     }
 
     return (await response.json()) as T;
-} 
+}
 
 export async function deleteRequest(path: string): Promise<void> {
     const response = await fetch(toUrl(path), {
@@ -89,7 +85,7 @@ export async function deleteRequest(path: string): Promise<void> {
 
         throw new Error(toErrorMessage(response.status, response.statusText, body));
     }
-}  
+}
 
 export async function putJson<T, TBody extends object>(
     path: string,
@@ -100,15 +96,15 @@ export async function putJson<T, TBody extends object>(
         headers: createHeaders(true),
         body: JSON.stringify(body),
     });
-     
+
     if (!response.ok) {
-        const responseBody = await response.text(); 
-        
+        const responseBody = await response.text();
+
         throw new Error(toErrorMessage(response.status, response.statusText, responseBody));
     }
 
     return (await response.json()) as T;
-} 
+}
 
 export async function postJson<T, TBody extends object>(
     path: string,

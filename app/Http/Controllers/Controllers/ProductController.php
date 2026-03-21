@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Controllers;
 
+use App\Events\ProductAdded;
 use App\Filters\ProductFilter;
 use App\Models\Product;
 use Exception;
@@ -11,11 +12,12 @@ use Illuminate\Validation\Rule;
 
 class ProductController extends Controller
 {
+
     public function store(Request $request): JsonResponse
     {
         try {
             $validatedData = $request->validate([
-                'name' => ['required', 'string'],
+                'name' => ['required', 'string', Rule::unique('products', 'name')],
                 'moved_at' => ['required', 'date'],
                 'sku' => ['required', 'string', Rule::unique('products', 'sku')],
                 'category_id' => ['nullable', 'integer', 'exists:categories,id'],
@@ -32,6 +34,8 @@ class ProductController extends Controller
                 'category:id,name',
                 'supplier:id,name',
             ]);
+
+            broadcast(new ProductAdded($product))->toOthers();
 
             return new JsonResponse($product, 201);
         } catch (Exception $e) {

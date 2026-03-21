@@ -1,16 +1,18 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';
-import useProfileStore from '@/stores/profileStore'; 
+import useProfileStore from '@/stores/profileStore';
 
 const profileStore = useProfileStore();
+
+const username = profileStore.name;
 
 
 </script>
 
 <template>
     <section class="rounded-xl border border-neutral-800 bg-neutral-900 p-6">
-        <h2 class="text-2xl font-semibold">Welcome to SPA Stock Management System</h2>
+        <h2 class="text-2xl font-semibold">Welcome to SPA Stock Management System, {{username}}!</h2>
         <div class="mt-6 flex flex-wrap gap-3">
             <a href="/dashboard" class="rounded-md border border-neutral-700 px-4 py-2 text-sm">
                 Open Dashboard
@@ -24,7 +26,7 @@ const profileStore = useProfileStore();
             <a href="/stock-movements" class="rounded-md border border-neutral-700 px-4 py-2 text-sm">
                 View Stock Movements
             </a>
-        </div> 
-       
+        </div>
+
     </section>
 </template>
