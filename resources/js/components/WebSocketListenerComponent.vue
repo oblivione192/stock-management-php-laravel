@@ -1,9 +1,14 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { onMounted, onBeforeUnmount, watch } from 'vue';
+import { onMounted, onBeforeMount, onBeforeUnmount, watch } from 'vue';
+import loadEcho from '@/echo'; 
 import Events from '@/events';
 import useDashboardStore from '@/stores/dashboardStore';
-import useProfileStore from '@/stores/profileStore';
+import useProfileStore from '@/stores/profileStore';  
+
+onBeforeMount(() => {
+    loadEcho();
+});
 
 const profileStore = useProfileStore();
 const dashboardStore = useDashboardStore();
@@ -17,9 +22,7 @@ const bindEvents = () => Events.listenToAllEvents();
 onMounted(() => {
     const { isAuthenticated } = storeToRefs(profileStore);
 
-
     bindEvents();
-
 
     watch(isAuthenticated, (loggedIn, wasLoggedIn) => {
         if (!loggedIn && wasLoggedIn) {

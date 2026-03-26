@@ -23,6 +23,15 @@ export type ProductRow = {
     } | null;
 };
 
+export type ProductDeleteResult = {
+    id: number;
+    loss: {
+        current_stock: number;
+        cost_price: number;
+
+    };
+};
+
 export type PaginatedProducts = {
     data: ProductRow[];
     current_page: number;

@@ -1,7 +1,8 @@
 import type { _GettersTree } from 'pinia';
 import { defineStore } from 'pinia';
+import { MovementRow } from '@/Objects/Responses/StockMovementResponses';
 import type { DashboardResponse } from '@/Objects/Responses/DashboardResponse';
-import type {ProductRow} from '@/Objects/Responses/ProductResponses';
+import type {ProductRow, ProductDeleteResult} from '@/Objects/Responses/ProductResponses';
 
 interface State{
     dashboardData: DashboardResponse,
@@ -49,6 +50,17 @@ const useDashboardStore = defineStore('dashboard',
                 this.dashboardData.metrics.totalUnits += product.current_stock;
                 this.dashboardData.metrics.totalStockValue += product.current_stock * Number(product.cost_price);
              },
+             handleProductDelete(product: ProductDeleteResult){
+                this.dashboardData.metrics.products -= 1;
+                this.dashboardData.metrics.totalUnits -= product.loss.current_stock;
+                this.dashboardData.metrics.totalStockValue -= product.loss.current_stock * Number(product.loss.cost_price);
+             },
+             handleStockIn(stock: MovementRow){
+                 this.dashboardData.metrics.totalUnits += stock.quantity;
+             },
+             handleStockOut(stock: MovementRow){
+                 this.dashboardData.metrics.totalUnits -= stock.quantity;
+             }
         }
     }
     );

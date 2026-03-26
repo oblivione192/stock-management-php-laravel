@@ -1,13 +1,15 @@
 import productAddedEvent from '@/events/ProductAdded';
+import productDeletedEvent from '@/events/ProductDeleted';
 
 const webSocketEventListenerList  = [
-    productAddedEvent
+    productAddedEvent,
+    productDeletedEvent
 ]
 
 export default {
      listenToAllEvents:  ()=>{
-          webSocketEventListenerList.forEach((listener)=>{
-              console.log(listener);
+          webSocketEventListenerList.forEach((listener)=>{ 
+              console.log(listener); 
               listener.listen();
           })
      },

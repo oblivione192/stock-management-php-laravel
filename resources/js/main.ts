@@ -1,7 +1,6 @@
 import { createPinia } from 'pinia';
 import { createApp } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';;
-import './echo';
 import useProfileStore from '@/stores/profileStore';
 import App from './App.vue';
 import { clearAuthToken, getAuthToken, getJson } from './lib/api';

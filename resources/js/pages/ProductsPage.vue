@@ -1,25 +1,35 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue';
+import DeleteConfirmationModal from '@/components/DeleteConfirmationModal.vue';
 import FormModal from '@/components/FormModal.vue';
-import ProductForm from '@/components/ProductForm.vue';  
-import { getJson, postJson, putJson, deleteRequest } from '@/lib/api'; 
-import {
-    createDefaultProductFilters
-
-} from '@/Objects/Filters/ProductFilters';
-import type {ProductFilters} from '@/Objects/Filters/ProductFilters';
+import ProductForm from '@/components/ProductForm.vue';
+import EventBus from '@/events/EventBus';
+import { Events } from '@/events/Events';
+import { getJson, postJson, putJson, deleteRequest } from '@/lib/api';
+import { createDefaultProductFilters } from '@/Objects/Filters/ProductFilters';
+import type { ProductFilters } from '@/Objects/Filters/ProductFilters';
 import {
     createDefaultProductFormPayload,
     toProductPayload,
 } from '@/Objects/Payloads/ProductPayloads';
-import type {CreateProductPayload, ProductFormPayload} from '@/Objects/Payloads/ProductPayloads';
-import type {CategoryOption, PaginatedProducts, ProductCategoriesResponse, ProductRow, ProductsResponse} from '@/Objects/Responses/ProductResponses';
-import DeleteConfirmationModal from '@/components/DeleteConfirmationModal.vue';
+import type {
+    CreateProductPayload,
+    ProductFormPayload,
+} from '@/Objects/Payloads/ProductPayloads';
+import type {
+    CategoryOption,
+    PaginatedProducts,
+    ProductCategoriesResponse,
+    ProductDeleteResult,
+    ProductRow,
+    ProductsResponse,
+} from '@/Objects/Responses/ProductResponses';
+import eventBus from '@/events/EventBus';
 
 const loading = ref(true);
 const error = ref('');
 const creating = ref(false);
-const createError = ref('')
+const createError = ref('');
 
 const isEditModalOpen = ref(false);
 const editError = ref('');
@@ -95,7 +105,9 @@ const load = async (): Promise<void> => {
 
     try {
         const queryString = buildQueryString();
-        const response = await getJson<ProductsResponse>(`/inventory/products?${queryString}`);
+        const response = await getJson<ProductsResponse>(
+            `/inventory/products?${queryString}`,
+        );
 
         data.value = response.products;
     } catch (err) {
@@ -161,9 +173,20 @@ const confirmDelete = async (): Promise<void> => {
             return;
         }
 
+        const productLossInfo: ProductDeleteResult = {
+            id: product.id,
+            loss:{
+                current_stock: product.current_stock,
+                cost_price: product.cost_price,
+            }
+        };
+
+        eventBus.emit(Events.PRODUCT_DELETED, productLossInfo);
+
         await load();
     } catch (err) {
-        deleteError.value = err instanceof Error ? err.message : 'Unable to delete product.';
+        deleteError.value =
+            err instanceof Error ? err.message : 'Unable to delete product.';
     } finally {
         deleting.value = false;
     }
@@ -174,10 +197,10 @@ const submitCreate = async (): Promise<void> => {
     createError.value = '';
 
     try {
-        await postJson<ProductRow, CreateProductPayload>(
-            '/inventory/products',
-            toProductPayload(newProduct.value),
-        );
+        const productResponse = await postJson<
+            ProductRow,
+            CreateProductPayload
+        >('/inventory/products', toProductPayload(newProduct.value));
 
         isCreateModalOpen.value = false;
 
@@ -187,9 +210,12 @@ const submitCreate = async (): Promise<void> => {
             return;
         }
 
+        EventBus.emit(Events.PRODUCT_ADDED, productResponse);
+
         await load();
     } catch (err) {
-        createError.value = err instanceof Error ? err.message : 'Unable to create product.';
+        createError.value =
+            err instanceof Error ? err.message : 'Unable to create product.';
     } finally {
         creating.value = false;
     }
@@ -214,7 +240,8 @@ const submitEdit = async (): Promise<void> => {
         isEditModalOpen.value = false;
         await load();
     } catch (err) {
-        editError.value = err instanceof Error ? err.message : 'Unable to update product.';
+        editError.value =
+            err instanceof Error ? err.message : 'Unable to update product.';
     } finally {
         editing.value = false;
     }
@@ -381,7 +408,7 @@ watch(isDeleteModalOpen, (open) => {
                             <td
                                 class="flex flex-col items-center gap-2 px-4 py-3 text-left sm:flex-row"
                             >
-                                <button 
+                                <button
                                     type="button"
                                     class="text-blue-500 hover:underline"
                                     @click="openEditModal(product)"

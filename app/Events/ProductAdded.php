@@ -19,7 +19,7 @@ class ProductAdded implements ShouldBroadcast
 
     public function broadcastOn(): Channel
     {
-        return new PrivateChannel('product.added');
+        return new PrivateChannel('products');
     }
 
     public function broadcastAs(): string

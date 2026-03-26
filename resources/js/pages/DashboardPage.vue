@@ -28,9 +28,7 @@ const load = async (): Promise<void> => {
 
             dashboardStore.setDashboardData(data.value);
             dashboardStore.setHasFetched();
-
-        }
-        else{
+        } else{
             data.value = dashboardStore.dashboardData;
         }
     } catch (err) {

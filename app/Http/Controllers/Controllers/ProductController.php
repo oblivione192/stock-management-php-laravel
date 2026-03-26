@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Controllers;
 
 use App\Events\ProductAdded;
+use App\Events\ProductDeleted;
 use App\Filters\ProductFilter;
 use App\Models\Product;
 use Exception;
@@ -93,6 +94,8 @@ class ProductController extends Controller
                 404
             );
         }
+        broadcast(new ProductDeleted($product))->toOthers();
+
         $product->delete();
 
         return new JsonResponse(null, 204);

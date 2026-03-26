@@ -1,9 +1,13 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue';
+import { computed } from 'vue';
 import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router';
-import WebSocketListenerComponent from '@/components/WebSocketListenerComponent.vue';
-import useProfileStore from './stores/profileStore';
-const route = useRoute();
+import WebSocketListenerComponent from '@/components/WebSocketListenerComponent.vue'; 
+import useProfileStore from './stores/profileStore'; 
+
+
+
+const route = useRoute();  
+
 
 const showHeader = computed(() => !route.meta.hideHeader);
 const mainClassName = computed(() => {
